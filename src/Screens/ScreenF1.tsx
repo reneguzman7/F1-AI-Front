@@ -7,30 +7,39 @@ import FloatingComponent from '../components/sideBar';
 import { items } from '../components/items';
 import InlineSVG from 'react-inlinesvg';
 import Header from '../components/banner'; // Asegúrate de importar el Header
-import { sendDataForPrediction } from '../services/api'; // Importa la función de predicción
+import { getPodium } from '../services/api'; // Importa la función de obtener el podio
+
 const ScreenF1: React.FC = () => {
   const [prediction, setPrediction] = useState<string[]>([]); // Predicción aleatoria
   const [isPredicted, setIsPredicted] = useState(false); // Bandera para indicar si se ha hecho la predicción
   const [key, setKey] = useState(0); // Key para reiniciar los componentes que dependen de una actualización
   const [balance, setBalance] = useState(12); // Saldo inicial
+  const [names, setNames] = useState<string[]>([]); // Nombres de los pilotos en el podio
+  const [images, setImages] = useState<string[]>([]); // Imágenes de los pilotos en el podio
 
-  const names = ["Lewis Hamilton", "Max Verstappen", "Charles Leclerc"];
-
-  // Función para aleatorizar las predicciones
-    const randomizePrediction = async () => {
+  // Función para obtener el podio
+  const fetchPodium = async () => {
     if (balance <= 0) return; // No hacer nada si el saldo es 0 o menor
-  
+
     try {
-      const response = await sendDataForPrediction(); // Envía los datos para la predicción
-      const shuffled = response.podio; // Asume que la respuesta contiene el podio predicho
+      const response = await getPodium(); // Obtiene los datos del podio
+      const shuffled = response.map(piloto => piloto.Piloto); // Asume que la respuesta contiene los nombres de los pilotos en el podio
       setPrediction(shuffled); // Establece la predicción
+      setNames(shuffled); // Establece los nombres de los pilotos en el podio
       setIsPredicted(true); // Marca la predicción como completada
       setKey(prevKey => prevKey + 1); // Cambia el key para reiniciar el SVG y Podium
-  
+
       // Reducir el saldo en 1 cada vez que se haga una predicción
       setBalance(prevBalance => prevBalance - 1);
+
+      // Obtener las imágenes correspondientes a los pilotos en el podio
+      const pilotImages = shuffled.map(pilot => {
+        const item = items.find(item => item.pilotImage.includes(pilot.toLowerCase().replace(/ /g, '')));
+        return item ? item.pilotImage : '';
+      });
+      setImages(pilotImages);
     } catch (error) {
-      console.error('Error predicting podium:', error);
+      console.error('Error fetching podium:', error);
     }
   };
 
@@ -85,7 +94,7 @@ const ScreenF1: React.FC = () => {
         >
           {/* Renderiza PodiumAnonim si no se ha presionado el botón */}
           {isPredicted ? (
-            <Podium key={key} prediction={prediction} names={names} /> // Pasa las predicciones reales a Podium
+            <Podium key={key} prediction={prediction} names={names} images={images} /> // Pasa las predicciones reales a Podium
           ) : (
             <PodiumAnonim key={key} /> // Muestra PodiumAnonim cuando no hay predicción
           )}
@@ -112,7 +121,7 @@ const ScreenF1: React.FC = () => {
                 transform: 'scale(0.98)',
               },
             }}
-            onClick={randomizePrediction}
+            onClick={fetchPodium}
             disabled={balance <= 0} // Deshabilita el botón si el saldo es 0
           >
             Predecir

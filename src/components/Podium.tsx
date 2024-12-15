@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
-// Icono de medalla
 import SportsScoreIcon from '@mui/icons-material/SportsScore'; // Medalla (se reutiliza)
 
 interface PodiumProps {
-  prediction: string[]; // Ya no es necesario para imágenes estáticas
   names: string[]; // Nombres de los pilotos
+  images: string[]; // Imágenes de los pilotos
   containerHeight?: string | number; // Altura dinámica del contenedor (por defecto es '75%')
 }
 
-const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '75%' }) => {
+const Podium: React.FC<PodiumProps> = ({ names, images, containerHeight = '75%' }) => {
   const [loadedCars, setLoadedCars] = useState(0);
   const [medalColors, setMedalColors] = useState<string[]>(['gold', 'silver', '#cd7f32']); // Colores iniciales de las medallas
   const [imagesLoaded, setImagesLoaded] = useState<boolean[]>([false, false, false]); // Estado para controlar si cada imagen se ha cargado
@@ -82,7 +81,7 @@ const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '7
     });
   };
 
-  const renderPodiumPosition = (index: number, position: number) => {
+  const renderPodiumPosition = (index: number) => {
     return (
       <Box 
         sx={{ 
@@ -143,7 +142,7 @@ const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '7
                 style={{ position: 'absolute' }}
               >
                 <img 
-                  src={`/static-car${index + 1}.avif`} // Ruta con formato AVIF
+                  src={images[index]} // Ruta con formato AVIF
                   alt={`Car ${index + 1}`}
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }} // Aseguramos que las imágenes se ajusten
                   onLoad={() => handleImageLoad(index)} // Llamar cuando la imagen se carga
@@ -206,9 +205,9 @@ const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '7
     >
       {/* Contenedor del podio con las posiciones de los coches */}
       <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-        {renderPodiumPosition(0, 3)} {/* 3er lugar */}
-        {renderPodiumPosition(1, 1)} {/* 1er lugar */}
-        {renderPodiumPosition(2, 2)} {/* 2do lugar */}
+        {renderPodiumPosition(0)} {/* 3er lugar */}
+        {renderPodiumPosition(1)} {/* 1er lugar */}
+        {renderPodiumPosition(2)} {/* 2do lugar */}
       </Box>
     </Box>
   );
