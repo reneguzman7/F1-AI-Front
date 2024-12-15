@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, Container } from '@mui/material';
+import { Box, Button, Container } from '@mui/material';
 import Podium from '../components/Podium'; // Asegúrate de que Podium esté correctamente importado
 import PodiumAnonim from '../components/PodiumAnonim'; // Importa el nuevo componente PodiumAnonim
 import Footer from '../components/footer';
@@ -7,7 +7,7 @@ import FloatingComponent from '../components/sideBar';
 import { items } from '../components/items';
 import InlineSVG from 'react-inlinesvg';
 import Header from '../components/banner'; // Asegúrate de importar el Header
-
+import { sendDataForPrediction } from '../services/api'; // Importa la función de predicción
 const ScreenF1: React.FC = () => {
   const [prediction, setPrediction] = useState<string[]>([]); // Predicción aleatoria
   const [isPredicted, setIsPredicted] = useState(false); // Bandera para indicar si se ha hecho la predicción
@@ -17,16 +17,21 @@ const ScreenF1: React.FC = () => {
   const names = ["Lewis Hamilton", "Max Verstappen", "Charles Leclerc"];
 
   // Función para aleatorizar las predicciones
-  const randomizePrediction = () => {
+    const randomizePrediction = async () => {
     if (balance <= 0) return; // No hacer nada si el saldo es 0 o menor
-
-    const shuffled = [...names].sort(() => Math.random() - 0.5); // Aleatoriza los nombres
-    setPrediction(shuffled); // Establece la predicción
-    setIsPredicted(true); // Marca la predicción como completada
-    setKey(prevKey => prevKey + 1); // Cambia el key para reiniciar el SVG y Podium
-
-    // Reducir el saldo en 1 cada vez que se haga una predicción
-    setBalance(prevBalance => prevBalance - 1);
+  
+    try {
+      const response = await sendDataForPrediction(); // Envía los datos para la predicción
+      const shuffled = response.podio; // Asume que la respuesta contiene el podio predicho
+      setPrediction(shuffled); // Establece la predicción
+      setIsPredicted(true); // Marca la predicción como completada
+      setKey(prevKey => prevKey + 1); // Cambia el key para reiniciar el SVG y Podium
+  
+      // Reducir el saldo en 1 cada vez que se haga una predicción
+      setBalance(prevBalance => prevBalance - 1);
+    } catch (error) {
+      console.error('Error predicting podium:', error);
+    }
   };
 
   return (

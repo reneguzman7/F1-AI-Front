@@ -115,8 +115,8 @@ const FloatingComponent: React.FC<FloatingComponentProps> = ({ items }) => {
             {/* Sección 2: Escudo */}
             <div
               style={{
-                width: '40px', // Ancho del escudo ajustado
-                height: '50px',
+                width: '70px', // Ancho del escudo ajustado
+                height: '50px', // Cuadrar esto
                 backgroundImage: `url(${item.shieldImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
