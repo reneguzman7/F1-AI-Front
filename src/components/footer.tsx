@@ -1,7 +1,6 @@
 // Footer.tsx
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-
 const Footer: React.FC = () => {
   return (
     <Box
@@ -9,7 +8,7 @@ const Footer: React.FC = () => {
         backgroundColor: 'rgba(51, 51, 51, 0.5)', // Fondo gris oscuro con opacidad de 0.8
         color: '#b0aeae',
         textAlign: 'center',
-        padding: '10px', // Aumenta el padding para hacerlo más espacioso
+        padding: '4px', // Aumenta el padding para hacerlo más espacioso
         position: 'fixed',
         bottom: 0,
         left: 0,  // Asegúrate de que ocupe todo el ancho

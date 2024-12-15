@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
-// Icono de medalla
 import SportsScoreIcon from '@mui/icons-material/SportsScore'; // Medalla (se reutiliza)
 
 interface PodiumProps {
   prediction: string[]; // Ya no es necesario para imágenes estáticas
-  names: string[]; // Nombres de los pilotos
   containerHeight?: string | number; // Altura dinámica del contenedor (por defecto es '75%')
 }
 
-const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '75%' }) => {
+const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) => {
   const [loadedCars, setLoadedCars] = useState(0);
   const [medalColors, setMedalColors] = useState<string[]>(['gold', 'silver', '#cd7f32']); // Colores iniciales de las medallas
-  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>([false, false, false]); // Estado para controlar si cada imagen se ha cargado
 
   // Rotar las medallas cada 1.5 segundos
   useEffect(() => {
@@ -74,15 +71,7 @@ const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '7
     })
   };
 
-  const handleImageLoad = (index: number) => {
-    setImagesLoaded((prev) => {
-      const updated = [...prev];
-      updated[index] = true; // Marca la imagen como cargada
-      return updated;
-    });
-  };
-
-  const renderPodiumPosition = (index: number, position: number) => {
+  const renderPodiumPosition = (index: number) => {
     return (
       <Box 
         sx={{ 
@@ -143,10 +132,9 @@ const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '7
                 style={{ position: 'absolute' }}
               >
                 <img 
-                  src={`/static-car${index + 1}.avif`} // Ruta con formato AVIF
-                  alt={`Car ${index + 1}`}
+                  src={`/Unknown_Man${index + 1}.webp`} // Ruta con las imágenes de Unknown Man
+                  alt={`Unknown Man ${index + 1}`}
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }} // Aseguramos que las imágenes se ajusten
-                  onLoad={() => handleImageLoad(index)} // Llamar cuando la imagen se carga
                 />
               </motion.div>
             )}
@@ -166,23 +154,6 @@ const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '7
             )}
           </AnimatePresence>
         </Box>
-
-        {/* Nombre debajo del coche (solo si la imagen está cargada y es el primer coche) */}
-        <AnimatePresence>
-          {imagesLoaded[index] && (
-            <motion.div
-              key={`name-${index}`}
-              initial="initial"
-              animate={textVariants.animate(index)} // Animación dinámica según el índice
-              variants={textVariants}
-              style={{ position: 'relative' }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 'bold', mt: 2 }}>
-                {names[index]}  {/* Mostrar el nombre correspondiente */}
-              </Typography>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </Box>
     );
   };
@@ -206,9 +177,9 @@ const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '7
     >
       {/* Contenedor del podio con las posiciones de los coches */}
       <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-        {renderPodiumPosition(0, 3)} {/* 3er lugar */}
-        {renderPodiumPosition(1, 1)} {/* 1er lugar */}
-        {renderPodiumPosition(2, 2)} {/* 2do lugar */}
+        {renderPodiumPosition(0)} {/* 3er lugar */}
+        {renderPodiumPosition(1)} {/* 1er lugar */}
+        {renderPodiumPosition(2)} {/* 2do lugar */}
       </Box>
     </Box>
   );
