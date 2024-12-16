@@ -6,9 +6,7 @@ import SportsScoreIcon from '@mui/icons-material/SportsScore';
 interface PodiumProps {
   podiumData: {
     Piloto: string;
-    shieldImage: string;
     pilotImage: string;
-    carImage: string;
   }[];
 }
 
@@ -31,7 +29,7 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
     })
   };
 
-  const renderPodiumPosition = (index: number, data: any) => {
+  const renderPodiumPosition = (index: number, data: { Piloto: string; pilotImage: string }) => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '40%', height: '100%', position: 'relative' }}>
         <AnimatePresence>
@@ -44,7 +42,7 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
         <Box sx={{ height: '150px', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', width: '170px', marginTop: '-10px' }}>
           <AnimatePresence>
             <motion.div key={`car-${index}`} initial="initial" animate={carVariants.animate(index)} variants={carVariants} style={{ position: 'absolute' }}>
-              <img src={data.carImage} alt={`Car ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <img src={data.pilotImage} alt={`Pilot ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </motion.div>
           </AnimatePresence>
         </Box>
