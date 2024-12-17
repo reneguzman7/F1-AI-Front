@@ -1,50 +1,50 @@
-import React from 'react';
+// src/components/FloatingComponent.tsx
+
+import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
+import { motion } from 'framer-motion';
 
 interface FloatingComponentProps {
   items: {
-    number: number;           // Número en el podio
+    number: number;           // N�mero en el podio
     shieldImage: string;      // URL de la imagen del escudo
     pilotImage: string;       // URL de la imagen del piloto
     carImage: string;         // URL de la imagen del auto
+    pilotName: string;        // Nombre del piloto
+    historicalData: string;   // Datos hist�ricos del piloto
   }[];
 }
 
 const FloatingComponent: React.FC<FloatingComponentProps> = ({ items }) => {
+  const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
+
+  const handlePress = (index: number) => {
+    setExpandedIndexes((prevIndexes) =>
+      prevIndexes.includes(index)
+        ? prevIndexes.filter((i) => i !== index)
+        : [...prevIndexes, index]
+    );
+  };
+
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         position: 'fixed',
         bottom: '30px',
         left: '15px',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'flex-start',
         padding: '10px',
         borderRadius: '10px',
         zIndex: 1000,
-        width: '300px', // Ancho del contenedor ajustado para evitar desbordamiento
-        maxHeight: '80vh', // Altura máxima para hacer el scroll
-        overflowY: 'auto', // Habilitar el scroll cuando los elementos superan la altura
-        overflowX: 'hidden', // Evitar el desbordamiento horizontal
-        scrollbarWidth: 'thin', // Barra de desplazamiento más delgada en Firefox
-        scrollbarColor: '#888 #252020', // Color del thumb y el track en Firefox
-      }}
-      // Estilo para cuando el mouse esté cerca
-      onMouseEnter={(e) => {
-        e.currentTarget.style.scrollbarWidth = 'thin';
-        e.currentTarget.style.scrollbarColor = '#888 #252020';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.scrollbarWidth = 'none';
-        e.currentTarget.style.scrollbarColor = '#252020';
+        width: '320px',
+        maxHeight: '80vh',
+        overflowY: 'auto',
       }}
     >
-      {/* Contenedor para el título "Pilotos" */}
-      <div
-        style={{
-          width: '94%',
-          backgroundColor: '#E10600', // Fondo rojo
+      <Box
+        sx={{
+          backgroundColor: '#E10600',
           padding: '10px',
           borderRadius: '8px',
           marginBottom: '10px',
@@ -53,128 +53,111 @@ const FloatingComponent: React.FC<FloatingComponentProps> = ({ items }) => {
       >
         <Typography
           variant="h6"
-          style={{
-            color: 'white', // Texto blanco
+          sx={{
+            color: 'white',
             fontWeight: 'bold',
           }}
         >
-          Pilotos
+          Orden de salida en Parrilla
         </Typography>
-      </div>
+      </Box>
 
-      {/* Sección para el contenido de los items (Escudo, Piloto, Carro) */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%', // Ajustar para que ocupe todo el ancho del contenedor
-        }}
-      >
-        {items.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginBottom: '8px',
-              backgroundColor: '#444',
-              borderRadius: '8px',
-              padding: '8px',
-              width: '95%',
-              justifyContent: 'flex-start',
-              position: 'relative',
-              height: '70px',
-              overflow: 'hidden', // Prevenir desbordamiento dentro de cada item
-            }}
-          >
-            {/* Sección 1: Número */}
-            <div
-              style={{
-                width: '25px',
-                height: '60px',
+      {items.map((item, index) => {
+        const isExpanded = expandedIndexes.includes(index);
+
+        return (
+          <Box key={index}>
+            <Box
+              component={motion.div}
+              onClick={() => handlePress(index)}
+              animate={isExpanded ? { x: 100 } : { x: 0 }}
+              transition={{ duration: 0.5 }}
+              sx={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                padding: '0px',
-                marginRight: '10px',
-                overflow: 'hidden', // Prevenir desbordamiento de los números
+                marginBottom: '8px',
+                backgroundColor: isExpanded ? '#555' : '#444',
+                borderRadius: '8px',
+                padding: '8px',
+                cursor: 'pointer',
+                position: 'relative',
               }}
             >
-              <Typography
-                variant="h6"
+              <Box
                 sx={{
-                  fontWeight: 'bold',
-                  color: '#fff',
-                  zIndex: 1,
+                  width: '25px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: '10px',
                 }}
               >
-                {item.number}
-              </Typography>
-            </div>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 'bold', color: '#fff' }}
+                >
+                  {item.number}
+                </Typography>
+              </Box>
 
-            {/* Sección 2: Escudo */}
-            <div
-              style={{
-                width: '40px', // Ancho del escudo ajustado
-                height: '50px',
-                backgroundImage: `url(${item.shieldImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                borderRadius: '10px',
-                padding: 0,
-                marginRight: '10px',
-                overflow: 'hidden', // Prevenir desbordamiento de la imagen del escudo
-              }}
-            />
+              <Box
+                sx={{
+                  width: '40px',
+                  height: '50px',
+                  backgroundImage: `url(${item.shieldImage})`,
+                  backgroundSize: 'cover',
+                  borderRadius: '10px',
+                  marginRight: '10px',
+                }}
+              />
 
-            {/* Sección 3: Piloto */}
-            <div
-              style={{
-                width: '50px', // Ancho del piloto ajustado
-                height: '56px',
-                backgroundImage: `url(${item.pilotImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                borderRadius: '10px',
-                marginRight: '10px',
-                overflow: 'hidden', // Prevenir desbordamiento de la imagen del piloto
-              }}
-            />
+              <Box
+                sx={{
+                  width: '50px',
+                  height: '56px',
+                  backgroundImage: `url(${item.pilotImage})`,
+                  backgroundSize: 'cover',
+                  borderRadius: '10px',
+                  marginRight: '10px',
+                }}
+              />
 
-            {/* Sección 4: Carro */}
-            <div
-              style={{
-                width: '170px', // Ancho del carro ajustado
-                height: '40px',
-                backgroundImage: `url(${item.carImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                borderRadius: '10px',
-                overflow: 'hidden', // Prevenir desbordamiento de la imagen del carro
-              }}
-            />
-          </div>
-        ))}
-      </div>
+              <Box
+                sx={{
+                  width: '170px',
+                  height: '40px',
+                  backgroundImage: `url(${item.carImage})`,
+                  backgroundSize: 'cover',
+                  borderRadius: '10px',
+                }}
+              />
+            </Box>
 
-      {/* Personalización de la barra de desplazamiento en navegadores Webkit (Chrome, Safari) */}
-      <style>
-        {`
-          /* Barra de desplazamiento más delgada */
-          ::-webkit-scrollbar {
-            width: 8px; /* Ancho más pequeño */
-          }
-          ::-webkit-scrollbar-thumb {
-            background-color: #888; /* Color de la barra de desplazamiento */
-            border-radius: 10px;
-          }
-          ::-webkit-scrollbar-track {
-            background-color: #252020; /* Color del track */
-            border-radius: 10px;
-          }
-        `}
-      </style>
-    </div>
+            {isExpanded && (
+              <Box
+                component={motion.div}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                sx={{
+                  backgroundColor: '#333',
+                  borderRadius: '8px',
+                  margin: '8px 0',
+                  padding: '10px',
+                  color: 'white',
+                  fontSize: '14px',
+                  width: '95%',
+                }}
+              >
+                <Typography variant="body2" sx={{ marginBottom: '8px' }}>
+                  {item.pilotName} - {item.historicalData}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        );
+      })}
+    </Box>
   );
 };
 
