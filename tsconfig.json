@@ -15,6 +15,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    "allowSyntheticDefaultImports": true, // Agregado
     "types": ["node", "react", "react-dom"]
   },
   "include": ["src"]

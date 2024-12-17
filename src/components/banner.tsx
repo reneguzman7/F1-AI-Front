@@ -1,31 +1,31 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import WalletIcon from '@mui/icons-material/AccountBalanceWallet'; // Ícono de wallet
-import PersonIcon from '@mui/icons-material/Person'; // Ícono de cuenta de perfil
+import WalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import PersonIcon from '@mui/icons-material/Person';
 import f1Url from '../../public/assets/IG_LogoTicker_9_F1.webp';
 
 interface HeaderProps {
   balance: number; // Propiedad para el saldo
 }
 
-const Header: React.FC<HeaderProps> = ({ balance }) => {
+const Header: React.FC<HeaderProps> = ({ balance = 0 }) => {
   return (
     <Box
       sx={{
         width: '100%',
-        height: '60px', // Altura fija del header
-        backgroundColor: '#E10600', // Rojo para el fondo
+        height: '60px',
+        backgroundColor: '#E10600',
         color: '#fff',
         display: 'flex',
-        justifyContent: 'center', // Centrar el contenido horizontalmente
-        alignItems: 'center', // Centrar el contenido verticalmente
-        position: 'fixed', // Fijo en la parte superior
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'fixed',
         top: 0,
         left: 0,
-        zIndex: 1000, // Asegura que el header esté sobre otros elementos
+        zIndex: 1000,
       }}
     >
-      {/* Mini rectángulo para el logo */}
+      {/* Mini rect�ngulo para el logo */}
       <Box
         sx={{
           width: '80px',
@@ -33,15 +33,15 @@ const Header: React.FC<HeaderProps> = ({ balance }) => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: '4px',
+          borderRadius: 1,
           position: 'absolute',
           left: '10px',
         }}
       >
         <img
           src={f1Url}
-          alt="F1 Logo"
-          style={{ width: '100%', height: '80%' }} // Ajusta el tamaño del logo
+          alt="F1 Official Logo"
+          style={{ width: '100%', height: '80%' }}
         />
       </Box>
 
@@ -58,29 +58,27 @@ const Header: React.FC<HeaderProps> = ({ balance }) => {
         podiumF1.io
       </Typography>
 
-      {/* Ícono de Wallet y saldo a la derecha con más margen */}
+      {/* �cono de Wallet y saldo a la derecha */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           position: 'absolute',
-          right: '20px', // Aumentamos el margen a la derecha
+          right: '20px',
         }}
       >
         <WalletIcon sx={{ color: '#fff', fontSize: '30px', mr: 1 }} />
-        
-        {/* Cambiar color del saldo cuando sea 0 */}
+
         <Typography
           variant="body2"
           sx={{
-            color: balance > 0 ? '#fff' : '#BDBDBD', // Color gris si el saldo es 0
+            color: balance > 0 ? '#fff' : '#BDBDBD',
             fontWeight: 'normal',
           }}
         >
-          ${balance.toFixed(2)} {/* Muestra el saldo con dos decimales */}
+          ${isNaN(balance) ? '0.00' : balance.toFixed(2)}
         </Typography>
 
-        {/* Ícono de cuenta de perfil */}
         <PersonIcon sx={{ color: '#fff', fontSize: '30px', ml: 2 }} />
       </Box>
     </Box>

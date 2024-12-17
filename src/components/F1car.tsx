@@ -1,46 +1,41 @@
-import React, { Suspense } from "react";
-import { useGLTF } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
+// src/components/F1Car.tsx
+import React from 'react';
+import { Card, CardContent, Typography, CardMedia } from '@mui/material';
 
-interface F1Car3DProps {
-  position?: [number, number, number];
-  scale?: number;
-  rotation?: [number, number, number];
+interface F1CarProps {
+  name: string;
+  team: string;
+  year: number;
+  imageUrl: string;
+  topSpeed: number; // km/h
+  horsepower: number; // HP
 }
 
-const F1CarModel: React.FC<F1Car3DProps> = ({ 
-  position = [0, 0, 0], 
-  scale = 0.25,
-  rotation = [0, 0, 0]
-}) => {
-  const { scene } = useGLTF("/assets/compressed_1732676606295_generic_f1.glb");
-  
-  // Clonar la escena para evitar problemas con la referencia
-  const clonedScene = React.useMemo(() => scene.clone(), [scene]);
-
+const F1Car: React.FC<F1CarProps> = ({ name, team, year, imageUrl, topSpeed, horsepower }) => {
   return (
-    <primitive 
-      object={clonedScene} 
-      position={position} 
-      scale={scale} 
-      rotation={rotation}
-    />
+    <Card sx={{ maxWidth: 345 }}>
+      <CardMedia
+        component="img"
+        height="140"
+        image={imageUrl}
+        alt={`${name} car image`}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {name} ({year})
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Team: {team}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Top Speed: {topSpeed} km/h
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Horsepower: {horsepower} HP
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
 
-const F1Car3D: React.FC<F1Car3DProps> = (props) => {
-  return (
-    <Canvas 
-      style={{ width: '300px', height: '300px' }} 
-      camera={{ position: [0, 2, 5], fov: 50 }}
-    >
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
-      <Suspense fallback={null}>
-        <F1CarModel {...props} />
-      </Suspense>
-    </Canvas>
-  );
-};
-
-export default F1Car3D;
+export default F1Car;

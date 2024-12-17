@@ -83,7 +83,7 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
               style={{ position: 'absolute' }}
             >
               <img
-                src={`${API_BASE_URL}${data.pilotImage}`} // Asegúrate de que la URL de la imagen sea correcta
+                src={`${API_BASE_URL}${data.pilotImage}`} // URL de la imagen del piloto
                 alt={`Piloto ${data.Piloto}`}
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
@@ -119,7 +119,7 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
         position: 'relative',
       }}
     >
-      {/* Asegúrate de que los datos estén ordenados correctamente */}
+      {/* Renderiza las posiciones del podio */}
       {podiumData.map((data, index) => renderPodiumPosition(data, index))}
     </Box>
   );
