@@ -1,13 +1,21 @@
+// src/api/podiumApi.ts
 import axios from 'axios';
 
-const API_BASE_URL = 'https://f1-ai-back.onrender.com/'; // Puedes configurar la URL base de tu API aquí si es necesario
+export const API_BASE_URL = 'https://f1-ai-back.onrender.com'; // Reemplaza con la URL real de tu backend
 
-export const fetchPodiumData = async () => {
+export interface PilotData {
+  Piloto: string;
+  shieldImage: string;
+  pilotImage: string;
+  carImage: string;
+}
+
+export const fetchPodiumData = async (): Promise<PilotData[]> => {
   try {
     const response = await axios.get(`${API_BASE_URL}/fill-Podium`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching podium data:', error);
+    console.error('Error al obtener los datos del podio:', error);
     throw error;
   }
 };

@@ -1,3 +1,4 @@
+// src/Screens/ScreenF1.tsx
 import React, { useState } from 'react';
 import { Box, Button, Container } from '@mui/material';
 import Podium from '../components/Podium';
@@ -7,15 +8,17 @@ import FloatingComponent from '../components/sideBar';
 import { items } from '../components/items';
 import InlineSVG from 'react-inlinesvg';
 import Header from '../components/banner';
-import { fetchPodiumData } from '../api/podiumApi'; // Importa la función de la API
+import { fetchPodiumData, PilotData } from '../api/podiumApi';
 
 const ScreenF1: React.FC = () => {
-  const [podiumData, setPodiumData] = useState<any[]>([]);
+  const [podiumData, setPodiumData] = useState<PilotData[]>([]);
   const [isPredicted, setIsPredicted] = useState(false);
   const [key, setKey] = useState(0);
   const [balance, setBalance] = useState(12);
 
   const handleFetchPodiumData = async () => {
+    if (balance <= 0) return; // No hacer nada si el saldo es 0 o menor
+
     try {
       const data = await fetchPodiumData();
       setPodiumData(data);
@@ -23,7 +26,7 @@ const ScreenF1: React.FC = () => {
       setKey(prevKey => prevKey + 1);
       setBalance(prevBalance => prevBalance - 1);
     } catch (error) {
-      console.error('Error fetching podium data:', error);
+      console.error('Error al obtener los datos del podio:', error);
     }
   };
 
@@ -48,8 +51,8 @@ const ScreenF1: React.FC = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '300px',
-          padding: { xs: '0 10px', sm: '0 20px' },
+          minHeight: '100vh',
+          padding: '0 20px',
           position: 'relative',
           zIndex: 1,
         }}
@@ -58,17 +61,17 @@ const ScreenF1: React.FC = () => {
           sx={{
             flex: 1,
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: { xs: '40px', sm: '60px' },
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            marginTop: '60px',
             marginBottom: '35px',
-            minHeight: { xs: '200px', sm: '300px' },
+            minHeight: '300px',
             maxWidth: '800px',
             width: '100%',
             backgroundColor: '#333',
             borderRadius: '16px',
             boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.3)',
-            padding: { xs: '10px', sm: '20px' },
+            padding: '20px',
           }}
         >
           {isPredicted ? (
@@ -78,7 +81,7 @@ const ScreenF1: React.FC = () => {
           )}
         </Box>
 
-        {/* Botón de predicción y componente flotante */}
+        {/* Botón Predecir */}
         <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '40px', position: 'relative' }}>
           <Box sx={{ position: 'absolute', left: '-260px', top: '0' }}>
             <FloatingComponent items={items} />
@@ -88,8 +91,8 @@ const ScreenF1: React.FC = () => {
             sx={{
               backgroundColor: balance > 0 ? '#FF6F00' : '#BDBDBD',
               '&:hover': { backgroundColor: balance > 0 ? '#E10600' : '#BDBDBD' },
-              fontSize: { xs: '16px', sm: '20px' },
-              padding: { xs: '10px 12px', sm: '12px 15px' },
+              fontSize: '20px',
+              padding: '12px 15px',
               borderRadius: '8px',
               boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)',
               textTransform: 'uppercase',
@@ -106,6 +109,8 @@ const ScreenF1: React.FC = () => {
         </Box>
         <Footer />
       </Container>
+
+      {/* Elemento flotante (opcional) */}
       {isPredicted && (
         <Box
           sx={{
@@ -113,8 +118,8 @@ const ScreenF1: React.FC = () => {
             top: '15%',
             right: '5%',
             zIndex: 1,
-            width: { xs: '120px', sm: '200px' },
-            height: { xs: '120px', sm: '200px' },
+            width: '200px',
+            height: '200px',
             borderRadius: '50%',
             overflow: 'hidden',
             backgroundColor: '#333333',
