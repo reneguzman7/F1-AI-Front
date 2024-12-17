@@ -4,4 +4,8 @@ import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
   plugins: [react(), svgr()],
+  server: {
+    host: '0.0.0.0',  // Escucha en todas las interfaces de red
+    port: 5173,  // Usa el puerto proporcionado por Render o 5173 por defecto
+  },
 });
