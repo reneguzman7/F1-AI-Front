@@ -1,215 +1,125 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, CircularProgress } from "@mui/material";
-import { motion, AnimatePresence } from "framer-motion";
-// Icono de medalla
-import SportsScoreIcon from '@mui/icons-material/SportsScore'; // Medalla (se reutiliza)
+// src/components/Podium.tsx
+import React from 'react';
+import { Box, Typography } from '@mui/material';
+import { motion, AnimatePresence } from 'framer-motion';
+import SportsScoreIcon from '@mui/icons-material/SportsScore';
+import { PilotData, API_BASE_URL } from '../api/podiumApi';
 
 interface PodiumProps {
-  prediction: string[]; // Ya no es necesario para imágenes estáticas
-  names: string[]; // Nombres de los pilotos
-  containerHeight?: string | number; // Altura dinámica del contenedor (por defecto es '75%')
+  podiumData: PilotData[];
 }
 
-const Podium: React.FC<PodiumProps> = ({ prediction, names, containerHeight = '75%' }) => {
-  const [loadedCars, setLoadedCars] = useState(0);
-  const [medalColors, setMedalColors] = useState<string[]>(['gold', 'silver', '#cd7f32']); // Colores iniciales de las medallas
-  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>([false, false, false]); // Estado para controlar si cada imagen se ha cargado
-
-  // Rotar las medallas cada 1.5 segundos
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMedalColors((prevColors) => {
-        // Rotar los colores cíclicamente
-        const rotatedColors = [...prevColors];
-        rotatedColors.push(rotatedColors.shift()!); // Mueve el primer color al final del array
-        return rotatedColors;
-      });
-    }, 1500); // Rotar cada 1.5 segundos
-
-    return () => clearInterval(interval); // Limpiar el intervalo al desmontar el componente
-  }, []);
-
+const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
   const carVariants = {
-    initial: { 
-      opacity: 0, 
-      y: -300, // Comienza fuera de la pantalla hacia arriba
-      transition: { 
-        duration: 1.5, 
-        type: "spring", 
-        stiffness: 100 
-      }
-    },
+    initial: { opacity: 0, y: -300, transition: { duration: 1.5, type: 'spring', stiffness: 100 } },
     animate: (index: number) => ({
-      opacity: 1, 
-      y: index === 0 ? 0 : index === 1 ? -60 : 30, // Colocamos el coche según la posición (escala de escalera)
-      transition: { 
-        duration: 1.5, 
-        type: "spring", 
-        stiffness: 50,
-        bounce: 0.4, 
-        delay: index === 0 ? 1 : 0 // Aplica un retraso al primer coche
-      }
-    })
+      opacity: 1,
+      y: index === 0 ? 0 : index === 1 ? -60 : 30,
+      transition: { duration: 1.5, type: 'spring', stiffness: 50, bounce: 0.4, delay: index * 0.3 },
+    }),
   };
 
   const textVariants = {
-    initial: { 
-      opacity: 0, 
-      y: -200, // Comienza fuera de la pantalla hacia arriba
-      transition: { 
-        duration: 1.5, 
-        type: "spring", 
-        stiffness: 100 
-      }
-    },
+    initial: { opacity: 0, y: -200, transition: { duration: 1.5, type: 'spring', stiffness: 100 } },
     animate: (index: number) => ({
-      opacity: 1, 
-      y: index === 0 ? 0 : index === 1 ? -60 : 30, // Colocamos el texto según el índice
-      transition: { 
-        duration: 1.5, 
-        type: "spring", 
-        stiffness: 50,
-        bounce: 0.4 
-      }
-    })
+      opacity: 1,
+      y: index === 0 ? 0 : index === 1 ? -60 : 30,
+      transition: { duration: 1.5, type: 'spring', stiffness: 50, bounce: 0.4 },
+    }),
   };
 
-  const handleImageLoad = (index: number) => {
-    setImagesLoaded((prev) => {
-      const updated = [...prev];
-      updated[index] = true; // Marca la imagen como cargada
-      return updated;
-    });
-  };
+  const medalColors = ['gold', 'silver', '#cd7f32'];
 
-  const renderPodiumPosition = (index: number, position: number) => {
+  const renderPodiumPosition = (data: PilotData, index: number) => {
     return (
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          width: '40%', 
-          height: '100%',
+      <Box
+        key={index}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          width: '30%',
           position: 'relative',
         }}
       >
-        {/* Renderiza la medalla según la posición */}
+        {/* Medalla */}
         <AnimatePresence>
           <motion.div
-            key={`position-${index}`}
             initial="initial"
-            animate={textVariants.animate(index)} // Animación dinámica según el índice
+            animate={textVariants.animate(index)}
             variants={textVariants}
             style={{ position: 'relative' }}
           >
             <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2 }}>
-              {/* El icono de medalla reemplaza el número */}
-              <SportsScoreIcon 
-                sx={{ 
-                  fontSize: 50, 
-                  color: medalColors[index], // Color de medalla asignado de forma alternada
-                  transition: 'color 0.5s ease' 
-                }} 
+              <SportsScoreIcon
+                sx={{
+                  fontSize: 50,
+                  color: medalColors[index],
+                  transition: 'color 0.5s ease',
+                }}
               />
             </Typography>
           </motion.div>
         </AnimatePresence>
 
-        {/* Renderiza la imagen del coche en la posición del podio */}
-        <Box 
-          sx={{ 
-            height: '150px', 
-            display: 'flex', 
-            justifyContent: 'center', 
+        {/* Imagen del piloto */}
+        <Box
+          sx={{
+            height: '150px',
+            display: 'flex',
+            justifyContent: 'center',
             alignItems: 'center',
             position: 'relative',
             width: '170px',
-            marginTop: '-10px', // Ajustamos la posición para la animación
+            marginTop: '-10px',
           }}
         >
           <AnimatePresence>
-            {loadedCars > index && (
-              <motion.div
-                key={`car-${index}`}
-                initial="initial"
-                animate={carVariants.animate(index)} // Animación dinámica según el índice
-                variants={carVariants}
-                onAnimationComplete={() => {
-                  if (index === loadedCars - 1 && loadedCars < 3) {
-                    setLoadedCars(prev => prev + 1);
-                  }
-                }}
-                style={{ position: 'absolute' }}
-              >
-                <img 
-                  src={`/static-car${index + 1}.avif`} // Ruta con formato AVIF
-                  alt={`Car ${index + 1}`}
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }} // Aseguramos que las imágenes se ajusten
-                  onLoad={() => handleImageLoad(index)} // Llamar cuando la imagen se carga
-                />
-              </motion.div>
-            )}
-            {loadedCars <= index && (
-              <Box 
-                sx={{ 
-                  position: 'absolute', 
-                  display: 'flex', 
-                  justifyContent: 'center', 
-                  alignItems: 'center', 
-                  width: '100%', 
-                  height: '100%' 
-                }}
-              >
-                <CircularProgress color="primary" />
-              </Box>
-            )}
+            <motion.div
+              initial="initial"
+              animate={carVariants.animate(index)}
+              variants={carVariants}
+              style={{ position: 'absolute' }}
+            >
+              <img
+                src={`${API_BASE_URL}${data.pilotImage}`} // Asegúrate de que la URL de la imagen sea correcta
+                alt={`Piloto ${data.Piloto}`}
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+              />
+            </motion.div>
           </AnimatePresence>
         </Box>
 
-        {/* Nombre debajo del coche (solo si la imagen está cargada y es el primer coche) */}
+        {/* Nombre del piloto */}
         <AnimatePresence>
-          {imagesLoaded[index] && (
-            <motion.div
-              key={`name-${index}`}
-              initial="initial"
-              animate={textVariants.animate(index)} // Animación dinámica según el índice
-              variants={textVariants}
-              style={{ position: 'relative' }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 'bold', mt: 2 }}>
-                {names[index]}  {/* Mostrar el nombre correspondiente */}
-              </Typography>
-            </motion.div>
-          )}
+          <motion.div
+            initial="initial"
+            animate={textVariants.animate(index)}
+            variants={textVariants}
+            style={{ position: 'relative' }}
+          >
+            <Typography variant="body2" sx={{ fontWeight: 'bold', mt: 2 }}>
+              {data.Piloto}
+            </Typography>
+          </motion.div>
         </AnimatePresence>
       </Box>
     );
   };
 
-  useEffect(() => {
-    setLoadedCars(1);
-  }, []);
-
   return (
     <Box
       sx={{
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: 'space-around',
+        alignItems: 'flex-end',
         width: '100%',
-        height: containerHeight,  // Altura dinámica aquí
-        maxWidth: '1200px',
-        marginBottom: '20px',
+        height: '100%',
         position: 'relative',
       }}
     >
-      {/* Contenedor del podio con las posiciones de los coches */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
-        {renderPodiumPosition(0, 3)} {/* 3er lugar */}
-        {renderPodiumPosition(1, 1)} {/* 1er lugar */}
-        {renderPodiumPosition(2, 2)} {/* 2do lugar */}
-      </Box>
+      {/* Asegúrate de que los datos estén ordenados correctamente */}
+      {podiumData.map((data, index) => renderPodiumPosition(data, index))}
     </Box>
   );
 };
