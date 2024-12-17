@@ -7,6 +7,7 @@ import { PilotData, API_BASE_URL } from '../api/podiumApi';
 
 interface PodiumProps {
   podiumData: PilotData[];
+  prediction: string[];
 }
 
 const Podium: React.FC<PodiumProps> = ({ podiumData }) => {

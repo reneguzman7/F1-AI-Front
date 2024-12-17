@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import SportsScoreIcon from '@mui/icons-material/SportsScore'; // Medalla (se reutiliza)
 
 interface PodiumProps {
-  prediction: string[]; // Ya no es necesario para imágenes estáticas
+  // prediction: string[]; // Ya no es necesario para imágenes estáticas
   containerHeight?: string | number; // Altura dinámica del contenedor (por defecto es '75%')
 }
 
-const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) => {
+const Podium: React.FC<PodiumProps> = ({ containerHeight = '75%' }) => {
   const [loadedCars, setLoadedCars] = useState(0);
   const [medalColors, setMedalColors] = useState<string[]>(['gold', 'silver', '#cd7f32']); // Colores iniciales de las medallas
 

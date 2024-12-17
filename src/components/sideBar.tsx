@@ -10,7 +10,6 @@ interface FloatingComponentProps {
     shieldImage: string;      // URL de la imagen del escudo
     pilotImage: string;       // URL de la imagen del piloto
     carImage: string;         // URL de la imagen del auto
-    pilotName: string;        // Nombre del piloto
     historicalData: string;   // Datos históricos del piloto
   }[];
 }
@@ -150,7 +149,7 @@ const FloatingComponent: React.FC<FloatingComponentProps> = ({ items }) => {
                 }}
               >
                 <Typography variant="body2" sx={{ marginBottom: '8px' }}>
-                  {item.pilotName} - {item.historicalData}
+                  {item.number} - {item.historicalData}
                 </Typography>
               </Box>
             )}

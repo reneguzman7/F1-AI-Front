@@ -140,5 +140,5 @@ export const items = [
     pilotImage: '/assets/Drivers/fracol01.avif', // Franco Colapinto
     carImage: '/assets/Cars/williams.avif', // Coche de Williams
     historicalData: "Franco Colapinto es un piloto prometedor que reemplazo a media temporada a Logan Sargeant destacando en sus priemras carreras en la F1. Con un enfoque en su desarrollo y adaptación a los monoplazas más potentes, se espera que continúe ganando experiencia y mejorando sus resultados en el futuro.",
-  },
+  }
 ];

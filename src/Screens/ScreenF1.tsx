@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, Container } from '@mui/material';
+import { Box, Button, Container } from '@mui/material';
 import Podium from '../components/Podium'; // Asegúrate de que Podium esté correctamente importado
 import PodiumAnonim from '../components/PodiumAnonim'; // Importa el nuevo componente PodiumAnonim
 import Footer from '../components/footer';
@@ -80,7 +80,7 @@ const ScreenF1: React.FC = () => {
         >
           {/* Renderiza PodiumAnonim si no se ha presionado el botón */}
           {isPredicted ? (
-            <Podium key={key} prediction={prediction} names={names} /> // Pasa las predicciones reales a Podium
+            <Podium key={key} prediction={prediction} podiumData={[]} /> // Pasa las predicciones reales a Podium
           ) : (
             <PodiumAnonim key={key} /> // Muestra PodiumAnonim cuando no hay predicción
           )}
