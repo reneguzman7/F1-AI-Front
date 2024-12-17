@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import SportsScoreIcon from '@mui/icons-material/SportsScore'; // Medalla (se reutiliza)
 
 interface PodiumProps {
-  prediction: string[]; // Ya no es necesario para imágenes estáticas
-  containerHeight?: string | number; // Altura dinámica del contenedor (por defecto es '75%')
+  prediction: string[]; // Ya no es necesario para im�genes est�ticas
+  containerHeight?: string | number; // Altura din�mica del contenedor (por defecto es '75%')
 }
 
 const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) => {
@@ -16,7 +16,7 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
   useEffect(() => {
     const interval = setInterval(() => {
       setMedalColors((prevColors) => {
-        // Rotar los colores cíclicamente
+        // Rotar los colores c�clicamente
         const rotatedColors = [...prevColors];
         rotatedColors.push(rotatedColors.shift()!); // Mueve el primer color al final del array
         return rotatedColors;
@@ -36,17 +36,16 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
         stiffness: 100 
       }
     },
-    animate: (index: number) => ({
-      opacity: 1, 
-      y: index === 0 ? 0 : index === 1 ? -60 : 30, // Colocamos el coche según la posición (escala de escalera)
+    animate: {
+      opacity: 1,
+      y: 0, // Todos los coches en la misma altura
       transition: { 
         duration: 1.5, 
         type: "spring", 
         stiffness: 50,
         bounce: 0.4, 
-        delay: index === 0 ? 1 : 0 // Aplica un retraso al primer coche
       }
-    })
+    }
   };
 
   const textVariants = {
@@ -59,16 +58,16 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
         stiffness: 100 
       }
     },
-    animate: (index: number) => ({
-      opacity: 1, 
-      y: index === 0 ? 0 : index === 1 ? -60 : 30, // Colocamos el texto según el índice
+    animate: {
+      opacity: 1,
+      y: 0, // Todos los textos en la misma altura
       transition: { 
         duration: 1.5, 
         type: "spring", 
         stiffness: 50,
         bounce: 0.4 
       }
-    })
+    }
   };
 
   const renderPodiumPosition = (index: number) => {
@@ -83,17 +82,17 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
           position: 'relative',
         }}
       >
-        {/* Renderiza la medalla según la posición */}
+        {/* Renderiza la medalla seg�n la posici�n */}
         <AnimatePresence>
           <motion.div
             key={`position-${index}`}
             initial="initial"
-            animate={textVariants.animate(index)} // Animación dinámica según el índice
+            animate="animate"
             variants={textVariants}
             style={{ position: 'relative' }}
           >
             <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2 }}>
-              {/* El icono de medalla reemplaza el número */}
+              {/* El icono de medalla reemplaza el n�mero */}
               <SportsScoreIcon 
                 sx={{ 
                   fontSize: 50, 
@@ -105,7 +104,7 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
           </motion.div>
         </AnimatePresence>
 
-        {/* Renderiza la imagen del coche en la posición del podio */}
+        {/* Renderiza la imagen del coche en la posici�n del podio */}
         <Box 
           sx={{ 
             height: '150px', 
@@ -114,7 +113,7 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
             alignItems: 'center',
             position: 'relative',
             width: '170px',
-            marginTop: '-10px', // Ajustamos la posición para la animación
+            marginTop: '0', // Asegura que no haya diferencias verticales
           }}
         >
           <AnimatePresence>
@@ -122,7 +121,7 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
               <motion.div
                 key={`car-${index}`}
                 initial="initial"
-                animate={carVariants.animate(index)} // Animación dinámica según el índice
+                animate="animate"
                 variants={carVariants}
                 onAnimationComplete={() => {
                   if (index === loadedCars - 1 && loadedCars < 3) {
@@ -132,9 +131,9 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
                 style={{ position: 'absolute' }}
               >
                 <img 
-                  src={`/Unknown_Man${index + 1}.webp`} // Ruta con las imágenes de Unknown Man
+                  src={`/Unknown_Man${index + 1}.webp`} // Ruta con las im�genes de Unknown Man
                   alt={`Unknown Man ${index + 1}`}
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }} // Aseguramos que las imágenes se ajusten
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }} // Aseguramos que las im�genes se ajusten
                 />
               </motion.div>
             )}
@@ -169,7 +168,7 @@ const Podium: React.FC<PodiumProps> = ({ prediction, containerHeight = '75%' }) 
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        height: containerHeight,  // Altura dinámica aquí
+        height: containerHeight,  // Altura din�mica aqu�
         maxWidth: '1200px',
         marginBottom: '20px',
         position: 'relative',
