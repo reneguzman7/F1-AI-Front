@@ -70,7 +70,7 @@ const ScreenF1: React.FC = () => {
             marginTop: { xs: '40px', sm: '60px' },
             marginBottom: '35px',
             minHeight: { xs: '200px', sm: '300px' },
-            maxWidth: '800px',
+            maxWidth: '300px',
             width: '100%',
             backgroundColor: '#333',
             borderRadius: '16px',
