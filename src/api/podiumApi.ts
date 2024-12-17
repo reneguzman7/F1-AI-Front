@@ -1,6 +1,6 @@
 // src/api/podiumApi.ts
 import axios from 'axios';
-
+import { fetchPodiumData, PilotData } from '../api/podiumApi';
 export const API_BASE_URL = 'https://f1-ai-back.onrender.com'; // Reemplaza con la URL real de tu backend
 
 export interface PilotData {

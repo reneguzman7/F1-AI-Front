@@ -9,7 +9,6 @@ import InlineSVG from 'react-inlinesvg';
 import Header from '../components/banner'; // Asegúrate de importar el Header
 
 const ScreenF1: React.FC = () => {
-  const [prediction, setPrediction] = useState<string[]>([]); // Predicción aleatoria
   const [isPredicted, setIsPredicted] = useState(false); // Bandera para indicar si se ha hecho la predicción
   const [key, setKey] = useState(0); // Key para reiniciar los componentes que dependen de una actualización
   const [balance, setBalance] = useState(12); // Saldo inicial

@@ -1,13 +1,11 @@
-// src/components/Podium.tsx
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import SportsScoreIcon from '@mui/icons-material/SportsScore';
-import { PilotData, API_BASE_URL } from '../api/podiumApi';
+import { PilotData} from '../api/podiumApi';
 
 interface PodiumProps {
   podiumData: PilotData[];
-  prediction: string[];
 }
 
 const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
@@ -16,7 +14,13 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
     animate: (index: number) => ({
       opacity: 1,
       y: index === 0 ? 0 : index === 1 ? -60 : 30,
-      transition: { duration: 1.5, type: 'spring', stiffness: 50, bounce: 0.4, delay: index * 0.3 },
+      transition: {
+        duration: 1.5,
+        type: 'spring',
+        stiffness: 50,
+        bounce: 0.4,
+        delay: index * 0.3,
+      },
     }),
   };
 
@@ -25,7 +29,12 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
     animate: (index: number) => ({
       opacity: 1,
       y: index === 0 ? 0 : index === 1 ? -60 : 30,
-      transition: { duration: 1.5, type: 'spring', stiffness: 50, bounce: 0.4 },
+      transition: {
+        duration: 1.5,
+        type: 'spring',
+        stiffness: 50,
+        bounce: 0.4,
+      },
     }),
   };
 
@@ -62,7 +71,7 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
             </Typography>
           </motion.div>
         </AnimatePresence>
-
+  
         {/* Imagen del piloto */}
         <Box
           sx={{
@@ -83,14 +92,14 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
               style={{ position: 'absolute' }}
             >
               <img
-                src={`${API_BASE_URL}${data.pilotImage}`} // URL de la imagen del piloto
+                src={data.pilotImage} // Usar la ruta de la imagen desde `data`
                 alt={`Piloto ${data.Piloto}`}
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </motion.div>
           </AnimatePresence>
         </Box>
-
+  
         {/* Nombre del piloto */}
         <AnimatePresence>
           <motion.div
@@ -108,7 +117,7 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
     );
   };
 
-  return (
+   return (
     <Box
       sx={{
         display: 'flex',
@@ -119,7 +128,6 @@ const Podium: React.FC<PodiumProps> = ({ podiumData }) => {
         position: 'relative',
       }}
     >
-      {/* Renderiza las posiciones del podio */}
       {podiumData.map((data, index) => renderPodiumPosition(data, index))}
     </Box>
   );
